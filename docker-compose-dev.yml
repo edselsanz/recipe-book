@@ -1,0 +1,33 @@
+version: "3"
+services:
+    rents:
+        container_name: 'recipes'
+        build: 
+            context: .
+            dockerfile: Dockerfile      
+        env_file:
+            - .env            
+        ports:
+            # - "3001:80"
+            - "3001:80"
+        volumes:                
+            - .:/var/www/html:delegated
+        networks:            
+            - local_network
+    rents-db:
+        image: mysql:5.7
+        container_name: 'recipes-db'
+        ports:
+            - "3601:3306"
+        environment:
+            MYSQL_ROOT_PASSWORD: rootpwd 
+            MYSQL_DATABASE: recipes
+            MYSQL_USER: user
+            MYSQL_PASSWORD: userdb      
+        volumes:
+            - ./dumps:/docker-entrypoint-initdb.d
+            # - ./conf:/etc/mysql/conf.d
+        networks:
+            - local_network
+networks:
+    local_network:
